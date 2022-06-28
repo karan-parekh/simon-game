@@ -1,6 +1,7 @@
 var gamePattern = [];
 var userClickedPattern = [];
 var level = 0;
+var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
 buttons = $(".btn");
 for (var i=0; i < buttons.length; i++) {
@@ -8,7 +9,11 @@ for (var i=0; i < buttons.length; i++) {
     button.addEventListener("click", handleClick);
 }
 
-$("html").on("keydown touchstart", function() {
+if (supportsTouch) {
+    updateTitle("Touch the background to start")
+}
+
+$("html").on("keydown touchstart", function(event) {
     if (level === 0) {
         setTimeout(nextSequence, 500);
     }
@@ -16,7 +21,7 @@ $("html").on("keydown touchstart", function() {
 
 function nextSequence() {
     if (level === 0) {
-        $(".score").hide();
+        $(".score").remove();
         $(".btn").show();
     }
     updateTitle("Level " + level);
@@ -39,6 +44,9 @@ function pickRandomColor() {
 }
 
 function handleClick() {
+    if (gamePattern.length === 0) {
+        return;
+    }
     var userChosenColor = this.id;
     playSound(userChosenColor);
     togglePressedClass(userChosenColor);
