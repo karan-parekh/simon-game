@@ -15,7 +15,7 @@ $("html").on("keydown touchstart", function() {
 });
 
 function nextSequence() {
-    $("h2").hide();
+    $(".score").hide();
     $(".btn").show();
     updateTitle("Level " + level)
     var buttonColors = ["red", "blue", "green", "yellow"];
@@ -59,18 +59,18 @@ function checkAnswer() {
 function gameOver() {
     playSound("game-over");
     toggleBodyClass();
-    $("h1").after('<br><h2 class="score">Press any key to restart</h2>')
-    $("h1").after('<h2 class="score">Your score is ' + gamePattern.length + '</h2>')
+    $("#level-title").after('<br><h2 class="score">Press any key to restart</h2>')
+    $("#level-title").after('<h2 class="score">Your score is ' + gamePattern.length + '</h2>')
     console.log("YOU SCORED: " + gamePattern.length);
     gamePattern = [];
     userClickedPattern = [];
     level = 0;
-    updateTitle("GAME OVER!")
+    updateTitle("GAME OVER")
     $(".btn").hide();
 }
 
 function updateTitle(string) {
-    $("h1").text(string)
+    $("#level-title").text(string)
 }
 
 function random() {
