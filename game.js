@@ -2,6 +2,7 @@ var gamePattern = [];
 var userClickedPattern = [];
 var level = 0;
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+var touchScreenMessage = "Touch the background to start"
 
 buttons = $(".btn");
 for (var i=0; i < buttons.length; i++) {
@@ -10,7 +11,7 @@ for (var i=0; i < buttons.length; i++) {
 }
 
 if (supportsTouch) {
-    updateTitle("Touch the background to start")
+    updateTitle(touchScreenMessage)
 }
 
 $("html").on("keydown touchstart", function(event) {
@@ -73,7 +74,11 @@ function checkAnswer() {
 function gameOver() {
     playSound("game-over");
     toggleBodyClass();
-    $("#level-title").after('<br><h2 class="score">Press any key to restart</h2>')
+    if (supportsTouch) {
+        $("#level-title").after('<br><h2 class="score">' + touchScreenMessage + '</h2>')
+    } else {
+        $("#level-title").after('<br><h2 class="score">Press any key to restart</h2>')
+    }
     $("#level-title").after('<h2 class="score">Your score is ' + gamePattern.length + '</h2>')
     gamePattern = [];
     userClickedPattern = [];
@@ -138,5 +143,5 @@ function playSound (key) {
 
 
 $("footer").on("click", function() {
-    alert("Repeat the flashing pattern in the same order as they flash. \nWait for the next flash after each turn");
+    alert("Repeat the flashing pattern in the same order as they flash for each turn. \nWait for the next flash after each turn");
 });
