@@ -10,21 +10,32 @@ for (var i=0; i < buttons.length; i++) {
 
 $("html").on("keydown touchstart", function() {
     if (level === 0) {
-        setTimeout(nextSequence, 300);
+        setTimeout(nextSequence, 500);
     }
 });
 
 function nextSequence() {
-    $(".score").hide();
-    $(".btn").show();
-    updateTitle("Level " + level)
-    var buttonColors = ["red", "blue", "green", "yellow"];
-    var randomNumber = random();
-    var randomChosenColor = buttonColors[randomNumber];
+    if (level === 0) {
+        $(".score").hide();
+        $(".btn").show();
+    }
+    updateTitle("Level " + level);
+    randomChosenColor = pickRandomColor();
     gamePattern.push(randomChosenColor);
     animateBlink(randomChosenColor);
     playSound(randomChosenColor);
     level += 1;
+}
+
+function pickRandomColor() {
+    var buttonColors = ["red", "blue", "green", "yellow"];
+    var randomNumber = random();
+    var randomColor = buttonColors[randomNumber];
+    var lastColor = gamePattern[gamePattern.length - 1];
+    if (randomColor === lastColor) {
+        return pickRandomColor()
+    }
+    return randomColor;
 }
 
 function handleClick() {
@@ -37,17 +48,12 @@ function handleClick() {
 
 function checkAnswer() {
     console.log(gamePattern);
-    console.log(userClickedPattern);
     var index = userClickedPattern.length - 1;
-    console.log("index: ", index);
 
     if (userClickedPattern[index] != gamePattern[index]) {
-        console.log("!!!! GAME OVER !!!!");
         gameOver();
         return   
     }
-
-    console.log("Success");
 
     if (userClickedPattern.length === gamePattern.length) {
         console.log("Calling next sequence");
@@ -61,7 +67,6 @@ function gameOver() {
     toggleBodyClass();
     $("#level-title").after('<br><h2 class="score">Press any key to restart</h2>')
     $("#level-title").after('<h2 class="score">Your score is ' + gamePattern.length + '</h2>')
-    console.log("YOU SCORED: " + gamePattern.length);
     gamePattern = [];
     userClickedPattern = [];
     level = 0;
@@ -85,7 +90,6 @@ function animateBlink(color) {
 }
 
 function toggleBodyClass() {
-    console.log("Toggling class");
     $("body").toggleClass("game-over");
     setTimeout(function() {
         $("body").toggleClass("game-over");
@@ -93,7 +97,6 @@ function toggleBodyClass() {
 }
 
 function togglePressedClass(color) {
-    console.log("Toggling class");
     $("." + color).toggleClass("pressed");
     setTimeout(function() {
         $("." + color).toggleClass("pressed");
@@ -124,3 +127,8 @@ function playSound (key) {
     }
     audio.play();
 }
+
+
+$("footer").on("click", function() {
+    alert("Repeat the flashing pattern in the same order as they flash. \nWait for the next flash after each turn");
+});
